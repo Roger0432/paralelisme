@@ -1,0 +1,6 @@
+CHANGE NUMBER OF PROCESSORS AVAILABLE TO JAVA.
+
+Open the "task manager" (administrador de tasques).
+In "applications" right-click on Eclipse and select "...details" (vés als detalls)
+On eclipse.exe right click and select "...affinity" (defineix l'affinitat)
+Decide wich processors java can use

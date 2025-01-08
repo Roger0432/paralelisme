@@ -1,0 +1,17 @@
+CONSOLE_ISSUE
+
+Console does not display the results of some System.out.print lines
+(or all results are shown on a loooooooong line)
+
+On the Console right click and select preferences. 
+Select fixed width console.
+
+OR...
+
+On the Console right click and select "word wrap"
+
+AND/OR..
+
+Window->preferences->Run/Debug->Console
+Select fixed width console
+
