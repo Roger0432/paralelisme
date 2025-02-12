@@ -4,23 +4,24 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import p00_ALCommon.LotteryMat;
 
-public class ExplicitLockBasedMat extends LotteryMat{
-	
+public class ExplicitLockBasedMat extends LotteryMat {
+
 	// Declare here your explicit lock. And nothing more
 	ReentrantLock lock;
-	
-	public ExplicitLockBasedMat (int numDrawers) {
+
+	public ExplicitLockBasedMat(int numDrawers) {
 		super(numDrawers);
 		lock = new ReentrantLock();
 	}
 
 	/* COMPLETE (implement inherited abstract methods) */
 
-	
 	@Override
 	public boolean tryBetting(String raceName, int memberId) {
 		lock.lock();
-		if (emptySquares == 0 || participatesInCurrentHand(raceName) || lastWinnerRace.equals(raceName)) {
+		if (emptySquares == 0 || 
+				participatesInCurrentHand(raceName) || 
+				lastWinnerRace.equals(raceName)) {
 			lock.unlock();
 			return false;
 		}
@@ -46,22 +47,5 @@ public class ExplicitLockBasedMat extends LotteryMat{
 	public void endDrawing() {
 		lock.unlock();
 	}
-	
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
