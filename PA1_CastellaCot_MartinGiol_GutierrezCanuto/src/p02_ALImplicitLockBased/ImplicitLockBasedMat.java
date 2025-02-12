@@ -40,7 +40,7 @@ public class ImplicitLockBasedMat extends LotteryMat {
     public void startDrawing(int drawerId) {
         //System.out.println("startDrawing(" + drawerId + ")");
         synchronized (this) {
-            while (currentDrawerId != drawerId || !isDrawing || emptySquares != 0) {
+            while (currentDrawerId != drawerId || isDrawing || emptySquares != 0) {
                 Thread.yield();
             }
             isDrawing = true;
