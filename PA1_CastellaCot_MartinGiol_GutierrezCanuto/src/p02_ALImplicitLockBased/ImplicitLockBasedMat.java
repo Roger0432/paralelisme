@@ -17,15 +17,12 @@ public class ImplicitLockBasedMat extends LotteryMat {
     public boolean tryBetting(String raceName, int memberId) {
         //System.out.println("tryBetting (" + raceName + "," + memberId + ")");
         synchronized (this) {
-            if (isBetting || 
-            		emptySquares == 0 || 
-            		participatesInCurrentHand(raceName) || 
-            		lastWinnerRace.equals(raceName)) {
-                return false;
+            if (!isBetting && emptySquares != 0 && !participatesInCurrentHand(raceName) && !lastWinnerRace.equals(raceName)) {
+            	isBetting = true;
+                return true;
             }
-            isBetting = true;
-            return true;
         }
+        return false;
     }
 
     @Override
