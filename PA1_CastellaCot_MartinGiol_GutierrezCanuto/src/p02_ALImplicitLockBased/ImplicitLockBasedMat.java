@@ -15,8 +15,7 @@ public class ImplicitLockBasedMat extends LotteryMat {
 
     @Override
     public boolean tryBetting(String raceName, int memberId) {
-        //System.out.println("tryBetting (" + raceName + "," + memberId + ")");
-        synchronized (this) {
+    	synchronized (this) {
             if (!isBetting && emptySquares != 0 && !participatesInCurrentHand(raceName) && !lastWinnerRace.equals(raceName)) {
             	isBetting = true;
                 return true;
@@ -27,7 +26,6 @@ public class ImplicitLockBasedMat extends LotteryMat {
 
     @Override
     public void endBetting() {
-        //System.out.println("endBetting");
         synchronized (this) {
             isBetting = false;
         }
@@ -35,18 +33,20 @@ public class ImplicitLockBasedMat extends LotteryMat {
 
     @Override
     public void startDrawing(int drawerId) {
-        //System.out.println("startDrawing(" + drawerId + ")");
-        synchronized (this) {
-            while (currentDrawerId != drawerId || isDrawing || emptySquares != 0) {
-                Thread.yield();
+        boolean okToEnter = false;
+        while (!okToEnter) {
+            synchronized (this) {
+                if (!isBetting && !isDrawing && emptySquares == 0 && drawerId == currentDrawerId) {
+                    isDrawing = true;
+                    okToEnter = true;
+                }
             }
-            isDrawing = true;
+            if (!okToEnter) Thread.yield();
         }
     }
 
     @Override
     public void endDrawing() {
-        //System.out.println("endDrawing");
         synchronized (this) {
             isDrawing = false; 
         }
