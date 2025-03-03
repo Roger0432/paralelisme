@@ -14,7 +14,6 @@ public class MildMonitor implements BathroomMonitor {
 	/* COMPLETE */
 	private ReentrantLock lock;
 	private Condition anteroom, stall;
-	private Gender anteroomGender;
 	private int menInAnteroom, womenInAnteroom;
 	private boolean[] freeStalls;
 
@@ -29,7 +28,6 @@ public class MildMonitor implements BathroomMonitor {
 		lock = new ReentrantLock(true);
 		anteroom = lock.newCondition();
 		stall = lock.newCondition();
-		anteroomGender = null;
 		menInAnteroom = 0;
 		womenInAnteroom = 0;
 		freeStalls = new boolean[4];
@@ -123,28 +121,3 @@ public class MildMonitor implements BathroomMonitor {
 		lock.unlock();
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
