@@ -18,7 +18,6 @@ public class QASynchronizer implements QuintupletSynchronizer{
 		/* COMPLETE from this point. Previous line must be the first one */
 		
 		try { barrier.await(); } catch (InterruptedException | BrokenBarrierException e) {}
-		
 			
 	}
 	
