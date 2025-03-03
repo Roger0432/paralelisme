@@ -51,10 +51,8 @@ public class StrongMonitor implements BathroomMonitor {
 
 	public void enter(Person p) { // person is in the entrace and enters to the waiting area
 		/* COMPLETE */
-		lock.lock();
 		injectTrace("--> ENTERING bathroom " + p);
 		/* COMPLETE if needed */
-		lock.unlock();
 	}
 
 	public void accessAnteroom(Person p) { // person is in the waiting area and wants to enter the anteroom
