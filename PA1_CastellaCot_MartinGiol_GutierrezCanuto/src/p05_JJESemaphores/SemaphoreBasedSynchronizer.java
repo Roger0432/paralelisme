@@ -11,9 +11,9 @@ public class SemaphoreBasedSynchronizer implements Synchronizer {
 	private Semaphore canJump = new Semaphore(1);
 	private Semaphore canJive = new Semaphore(0);
 	private Semaphore canJoy = new Semaphore(0);	
-	private int lastJumpId = -1;
-	private int jumpCount = 0;
-	private int jiveCount = 0;
+	private volatile int lastJumpId = -1;
+	private volatile int jumpCount = 0;
+	private volatile int jiveCount = 0;
 
 	@Override
 	public void letMeJump(int id) {

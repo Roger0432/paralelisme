@@ -13,9 +13,9 @@ public class CSBasedSynchronizer implements Synchronizer {
 	private final static int JUMP = 1;
 	private final static int JIVE = 2;
 	private final static int JOY = 3;
-	private int lastJumpId = -1;
-	private int jumpCount = 0;
-	private int jiveCount = 0;
+	private volatile int lastJumpId = -1;
+	private volatile int jumpCount = 0;
+	private volatile int jiveCount = 0;
 
 	public CSBasedSynchronizer() {
 		state = new AtomicInteger(JUMP);

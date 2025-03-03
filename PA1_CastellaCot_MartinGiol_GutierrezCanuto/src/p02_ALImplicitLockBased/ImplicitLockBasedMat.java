@@ -26,9 +26,7 @@ public class ImplicitLockBasedMat extends LotteryMat {
 
     @Override
     public void endBetting() {
-        synchronized (this) {
-            isBetting = false;
-        }
+    	isBetting = false;
     }
 
     @Override
@@ -47,8 +45,6 @@ public class ImplicitLockBasedMat extends LotteryMat {
 
     @Override
     public void endDrawing() {
-        synchronized (this) {
-            isDrawing = false; 
-        }
+    	isDrawing = false; 
     }
 }
