@@ -75,8 +75,6 @@ public class Server extends Thread {
 
     private void reset(Request request, PrintWriter output) {
     	
-        updateNumberAttempts();
-    	
         targetNumber = new Random().nextInt(999) + 1;
         attempts.clear();
 
@@ -87,10 +85,13 @@ public class Server extends Thread {
 
     private void check(Request request, PrintWriter output) {
         
+    	totalAttempts++;
+    	
     	if (attempts.contains(request.value)) output.println("REPETITION");
         
         else {
             attempts.add(request.value);
+            
             if (request.value == targetNumber) {
             	totalGuessed++;
             	output.println("EQUAL");
@@ -106,13 +107,11 @@ public class Server extends Thread {
     }
 
     private void terminate(PrintWriter output) {
-    	updateNumberAttempts();
+    	
         output.println("GOODBYE! Numbers guessed: " + totalGuessed + ", Total attempts: " + totalAttempts);        
     }
     
-    private void updateNumberAttempts() {
-    	totalAttempts += attempts.size();
-    }
+    
 }
 
 // Utility class. Makes requests out of strings
