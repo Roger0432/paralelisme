@@ -152,11 +152,43 @@ public class GuiClientRMI implements ActionListener {
 	
 	protected void do_btnConnect_actionPerformed(ActionEvent e) {
 		/* COMPLETE */
+		
+		try {
+	        Registry registry = LocateRegistry.getRegistry("localhost", 1999);
+	        guessObject = (GuessGameObjectInterface) registry.lookup("GUESS");
+	        myId = guessObject.startGame();
+
+	        btnSend.setEnabled(true);
+	        btnReset.setEnabled(true);
+	        btnTerminate.setEnabled(true);
+	        btnList.setEnabled(true);
+	        textField.setEnabled(true);
+
+	        messages.append("Connected to the server, id: " + myId + "\n");
+	        
+	    } 
+		catch (Exception ex) {
+	        JOptionPane.showMessageDialog(frmGuessTheNumber,
+	        		"Connection error",
+	        		"Error", 
+	        		JOptionPane.ERROR_MESSAGE);
+	    }
 	}
 	
 	protected  void do_btnReset_actionPerformed(ActionEvent e) {
-		
 		/* COMPLETE */
+		
+		try {
+	        boolean cheat = cheatBox.isSelected();
+	        String response = guessObject.reset(myId, cheat);
+	        messages.append("Servidor says: " + response + "\n");
+	    } 
+		catch (RemoteException ex) {
+	        JOptionPane.showMessageDialog(frmGuessTheNumber, 
+	        		"Reset error", 
+	        		"Error", 
+	        		JOptionPane.ERROR_MESSAGE);
+	    }
 	}
 	
 	protected  void do_btnSend_actionPerformed(ActionEvent e) {
@@ -177,6 +209,17 @@ public class GuiClientRMI implements ActionListener {
 		// send number to server
 		
 		/* COMPLETE */
+		
+		try {
+	        String response = guessObject.check(myId, number);
+	        messages.append("Servidor says: " + response + "\n");
+	    } 
+		catch (RemoteException ex) {
+	        JOptionPane.showMessageDialog(frmGuessTheNumber, 
+	        		"Error en enviar número", 
+	        		"Error",
+	        		JOptionPane.ERROR_MESSAGE);
+	    }
 		
 		this.textField.setText("");
 	}
