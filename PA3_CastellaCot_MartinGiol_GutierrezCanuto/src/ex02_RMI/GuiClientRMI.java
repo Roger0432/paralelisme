@@ -153,26 +153,22 @@ public class GuiClientRMI implements ActionListener {
 	protected void do_btnConnect_actionPerformed(ActionEvent e) {
 		/* COMPLETE */
 		
-		try {
-	        Registry registry = LocateRegistry.getRegistry("localhost", 1999);
-	        guessObject = (GuessGameObjectInterface) registry.lookup("GUESS");
-	        myId = guessObject.startGame();
+		 try {
+		        Registry registry = LocateRegistry.getRegistry("localhost", 1999);
+		        guessObject = (GuessGameObjectInterface) registry.lookup("GUESS");
+		        myId = guessObject.startGame();
+		        messages.append("Connected to the server. ID: " + myId + "\n");
 
-	        btnSend.setEnabled(true);
-	        btnReset.setEnabled(true);
-	        btnTerminate.setEnabled(true);
-	        btnList.setEnabled(true);
-	        textField.setEnabled(true);
-
-	        messages.append("Connected to the server, id: " + myId + "\n");
-	        
-	    } 
-		catch (Exception ex) {
-	        JOptionPane.showMessageDialog(frmGuessTheNumber,
-	        		"Connection error",
-	        		"Error", 
-	        		JOptionPane.ERROR_MESSAGE);
-	    }
+		        btnReset.setEnabled(true);
+		        btnTerminate.setEnabled(true);
+		        cheatBox.setEnabled(true);
+		 } 
+		 catch (Exception ex) {
+		        JOptionPane.showMessageDialog(frmGuessTheNumber, 
+		        		"Connection Error", 
+		        		"Error", 
+		        		JOptionPane.ERROR_MESSAGE);
+		    }
 	}
 	
 	protected  void do_btnReset_actionPerformed(ActionEvent e) {
@@ -181,11 +177,16 @@ public class GuiClientRMI implements ActionListener {
 		try {
 	        boolean cheat = cheatBox.isSelected();
 	        String response = guessObject.reset(myId, cheat);
-	        messages.append("Servidor says: " + response + "\n");
+
+	        messages.append("Server says: " + response + "\n");
+
+	        btnSend.setEnabled(true);
+	        btnList.setEnabled(true);
+	        textField.setEnabled(true);
 	    } 
 		catch (RemoteException ex) {
 	        JOptionPane.showMessageDialog(frmGuessTheNumber, 
-	        		"Reset error", 
+	        		"Reset Error: " + ex.getMessage(), 
 	        		"Error", 
 	        		JOptionPane.ERROR_MESSAGE);
 	    }
@@ -212,12 +213,26 @@ public class GuiClientRMI implements ActionListener {
 		
 		try {
 	        String response = guessObject.check(myId, number);
-	        messages.append("Servidor says: " + response + "\n");
+	        messages.append("Server says: " + response + "\n");
+
+	        if (response.equals("EQUAL")) {
+	            JOptionPane.showMessageDialog(this.frmGuessTheNumber,
+					    "You got it! Number was: "+number+"\nPress Reset to play again\npress Terminate to quit", 
+					    "NUMBER GUESSED!!!",
+					    JOptionPane.INFORMATION_MESSAGE);
+	            
+				messages.append("Server says (my number is): EQUAL\n");
+				messages.append("NUMBER GUESSED!!! "+number+" \n");
+
+	            btnSend.setEnabled(false);
+	            btnList.setEnabled(false);
+	            textField.setEnabled(false);
+	        }
 	    } 
 		catch (RemoteException ex) {
 	        JOptionPane.showMessageDialog(frmGuessTheNumber, 
-	        		"Error en enviar número", 
-	        		"Error",
+	        		"Send Error", 
+	        		"Error", 
 	        		JOptionPane.ERROR_MESSAGE);
 	    }
 		
