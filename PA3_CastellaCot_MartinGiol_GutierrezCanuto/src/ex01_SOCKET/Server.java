@@ -64,7 +64,7 @@ public class Server extends Thread {
                         break;
                     case TERMINATE:
                         terminate(outputChannel);
-                        return;
+                        return; //end run method
                 }
             }
 
