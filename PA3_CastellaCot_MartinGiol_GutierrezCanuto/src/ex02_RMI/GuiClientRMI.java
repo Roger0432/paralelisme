@@ -215,13 +215,12 @@ public class GuiClientRMI implements ActionListener {
 	        String response = guessObject.check(myId, number);
 	        messages.append("Server says: " + response + "\n");
 
-	        if (response.equals("EQUAL")) {
+	        if (response.equalsIgnoreCase("EQUAL")) {
 	            JOptionPane.showMessageDialog(this.frmGuessTheNumber,
 					    "You got it! Number was: "+number+"\nPress Reset to play again\npress Terminate to quit", 
 					    "NUMBER GUESSED!!!",
 					    JOptionPane.INFORMATION_MESSAGE);
 	            
-				messages.append("Server says (my number is): EQUAL\n");
 				messages.append("NUMBER GUESSED!!! "+number+" \n");
 
 	            btnSend.setEnabled(false);

@@ -31,8 +31,11 @@ public class GuessGameObjectImpl extends UnicastRemoteObject implements GuessGam
 	@Override
 	public int startGame() throws RemoteException {
 		// TODO Auto-generated method stub
-		int id = nextId;
-		nextId++;	
+		int id;
+	    synchronized (this) {
+	        id = nextId;
+	        nextId++;
+	    }	
         ClientRep client = new ClientRep();
         client.theNumber = generateRandomNumber();
         synchronized (clients) {
@@ -47,31 +50,27 @@ public class GuessGameObjectImpl extends UnicastRemoteObject implements GuessGam
 		
 		ClientRep client;
 		synchronized (clients) {
-			client = clients.get(id);
+		    client = clients.get(id);
+		    if (client == null) throw new RemoteException("Unknown client id");
 		}
-		
-        if (client == null) throw new RemoteException("Unknown client id");
 
-        synchronized (client) {
-        
-	        if (client.justGuessed) throw new RemoteException("You have already guessed the number. Do a RESET to continue.");
-	        
-	        if (client.numbersChecked.contains(number)) return "REPETITION";
-	        
-	        client.numbersChecked.add(number);
-	        
-	        client.attempts++;
-	        
-	        if (number == client.theNumber) {
-	            client.justGuessed = true;
-	            client.guessed++;
-	            return "EQUAL";
-	        }
-	        
-	        else if (number < client.theNumber) return "HIGHER";
-	        
-	        else return "LOWER";  
-        }
+		synchronized (client) {
+		    if (client.justGuessed) throw new RemoteException("You have already guessed the number. Do a RESET to continue.");
+		    
+		    if (client.numbersChecked.contains(number)) return "REPETITION";
+		    
+		    client.numbersChecked.add(number);
+		    client.attempts++;
+		    
+		    if (number == client.theNumber) {
+		        client.justGuessed = true;
+		        client.guessed++;
+		        return "EQUAL";
+		    }
+		    
+		    else if (number < client.theNumber) return "HIGHER";
+		    else return "LOWER";
+		}
 	}
 
 	@Override
@@ -86,7 +85,7 @@ public class GuessGameObjectImpl extends UnicastRemoteObject implements GuessGam
         if (client == null) throw new RemoteException("Unknown client id");
         
         synchronized (client) {
-        	return new ArrayList<>(client.numbersChecked);
+            return new ArrayList<>(client.numbersChecked);
         }
 	}
 
@@ -101,7 +100,7 @@ public class GuessGameObjectImpl extends UnicastRemoteObject implements GuessGam
 		
         if (client == null) throw new RemoteException("Unknown client id");
 	        
-	        synchronized (client) {
+        synchronized (client) {
 	        client.theNumber = generateRandomNumber();
 	        client.justGuessed = false;
 	        client.numbersChecked.clear();
@@ -113,17 +112,19 @@ public class GuessGameObjectImpl extends UnicastRemoteObject implements GuessGam
 
 	@Override
 	public String terminate(int id) throws RemoteException {
-		// TODO Auto-generated method stub
 		
-		ClientRep client;
+	    ClientRep client;
 	    synchronized (clients) {
 	        client = clients.remove(id);
 	    }
-		
-        if (client == null)  throw new RemoteException("Unknown client id");
 
-        return "GOODBYE! Numbers guessed: " + client.guessed + ", Total attempts: " + client.attempts;
+	    if (client == null) throw new RemoteException("Unknown client id");
+
+	    synchronized (client) {
+	        return "GOODBYE! Numbers guessed: " + client.guessed + ", Total attempts: " + client.attempts;
+	    }
 	}
+
 	
 	/* COMPLETE */
 	private int generateRandomNumber() {
